@@ -4,7 +4,8 @@ const timeDisplay = document.getElementById('timer');
 const quoteInput = document.getElementById('quoteInput');
 const bestTime = document.getElementById('bestTime');
 async function getnewText() {
-    const text = await fetchValue(endPoint);
+    // const text = await fetchValue(endPoint);
+    const text= 'Hello User, Start Typing to improve your typing skills today'
     const textArray = text.split('');
     quoteDisplay.innerHTML = '';
     quoteInput.value = '';
@@ -64,7 +65,7 @@ function updateTime() {
         bestTime.innerText = value;
 }
 function fetchValue(endPoint) {
-    return fetch(endPoint).then(res=>{return res.json()}).then(res=>{return res.content})
+    // return fetch(endPoint).then(res=>{return res.json()}).then(res=>{return res.content})
 }
 
 getnewText();
