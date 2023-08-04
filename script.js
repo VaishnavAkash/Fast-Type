@@ -1,11 +1,11 @@
-const endPoint = 'https://api.quotable.io/random';
+// const endPoint = 'https://api.quotable.io/random';
 const quoteDisplay = document.getElementById('quote-display');
 const timeDisplay = document.getElementById('timer');
 const quoteInput = document.getElementById('quoteInput');
 const bestTime = document.getElementById('bestTime');
 async function getnewText() {
-    // const text = await fetchValue(endPoint);
-    const text= 'Hello User, Start Typing to improve your typing skills today'
+    const text = await fetchValue();
+    // const text= 'Hello User, Start Typing to improve your typing skills today'
     const textArray = text.split('');
     quoteDisplay.innerHTML = '';
     quoteInput.value = '';
@@ -64,8 +64,9 @@ function updateTime() {
         window.localStorage.setItem('currTime', value);
         bestTime.innerText = value;
 }
-function fetchValue(endPoint) {
+function fetchValue() {
     // return fetch(endPoint).then(res=>{return res.json()}).then(res=>{return res.content})
+    return 'Hello User, Start Typing to improve your typing skills today';
 }
 
 getnewText();
