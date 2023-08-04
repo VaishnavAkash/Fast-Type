@@ -1,76 +1,101 @@
-const quoteDisplay = document.getElementById('quote-display');
-const timeDisplay = document.getElementById('timer');
-const quoteInput = document.getElementById('quoteInput');
-const bestTime = document.getElementById('BestTime');
-async function getnewText() {
-    const text = await fetchValue();
-    // const text= 'Hello User, Start Typing to improve your typing skills today'
-    const textArray = text.split('');
-    quoteDisplay.innerHTML = '';
-    quoteInput.value = '';
-    textArray.forEach((val) => {
-        const spanTag = document.createElement('span');
-        spanTag.classList.add('eachChar');
-        spanTag.innerText = val;
-        quoteDisplay.appendChild(spanTag);
-    })
-    timer();
-}
+// const RANDOM_QUOTE_API_URL = "http://api.quotable.io/random";
+const quoteDisplayElement = document.getElementById("quote-display");
+const quoteInput = document.getElementById("quoteInput");
+const timer = document.getElementById("timer");
+const bestTime = document.getElementById("BestTime");
 
-let correct = true;
+quoteInput.addEventListener("input", () => {
+  const allQuoteChars = document.querySelectorAll(".eachChar");
+  const allInputChars = quoteInput.value.split("");
 
-quoteInput.addEventListener('input', () => {
-    const charArray = document.querySelectorAll('.eachChar');
-    const inputArray = quoteInput.value.split('');
-    charArray.forEach((val, idx) => {
-        if (!inputArray[idx]) {
-            val.classList.remove('correct');
-            val.classList.remove('incorrect');
-            correct = false;
-        }
-        else if (charArray[idx].innerText == inputArray[idx]) {
-            val.classList.add('correct');
-            val.classList.remove('incorrect');
-        } else if(charArray[idx]!= inputArray[idx]) {
-            val.classList.add('incorrect');
-            val.classList.remove('correct');
-            correct = false;
-        }
-    })
-    if (correct) {
-        updateTime(currTime);
-        clearInterval(key);
-        getnewText();
+  let allCorrect = true;
+
+  allQuoteChars.forEach((eQuoteChar, idx) => {
+    if (!allInputChars[idx]) {
+      console.log(
+        "allChars are not complete : ",
+        eQuoteChar.value,
+        " - ",
+        allInputChars[idx]
+      );
+      console.log(allInputChars);
+      eQuoteChar.classList.remove("correct");
+      eQuoteChar.classList.remove("incorrect");
+      allCorrect = false;
+    } else if (allInputChars[idx] == eQuoteChar.innerText) {
+      eQuoteChar.classList.add("correct");
+      eQuoteChar.classList.remove("incorrect");
+    } else if (allInputChars[idx] != eQuoteChar.innerText) {
+      console.log(
+        "Mismatch in chars ",
+        allInputChars[idx],
+        " - ",
+        eQuoteChar.innerText
+      );
+      eQuoteChar.classList.remove("correct");
+      eQuoteChar.classList.add("incorrect");
+      allCorrect = false;
     }
-})
-let key;
-let currTime;
-function timer() {
-    const start = new Date();
-    key= setInterval(() => {
-        currTime = parseInt((new Date() - start) / 1000);
-        timeDisplay.innerText = currTime;
-    })
-}
+  });
 
-function updateTime() {
-    if (!window.localStorage.getItem('currTime')) {
-        window.localStorage.setItem('currTime', currTime);
-        bestTime.innerText= window.localStorage.getItem('currTime')
-        return;
+  console.log(allCorrect);
+
+  if (allCorrect) {
+    const leastTime = window.localStorage.getItem("leastTime");
+    if (!leastTime || leastTime == "undefined") {
+      const val = parseInt(timer.innerText);
+      window.localStorage.setItem("leastTime", val);
+      bestTime.innerText = val;
+    } else {
+      const currTime = parseInt(timer.innerText);
+      if (currTime < leastTime) {
+        window.localStorage.setItem("leastTime", currTime);
+        bestTime.innerText = currTime;
+      }
     }
-        const value = Math.min(currTime,parseInt(window.localStorage.getItem('currTime')));
-        window.localStorage.setItem('currTime', value);
-        bestTime.innerText = value;
-}
-function fetchValue() {
-    // return fetch(endPoint).then(res=>{return res.json()}).then(res=>{return res.content})
-    return 'Hello User, Start Typing to improve your typing skills today';
+    quoteDisplayElement.innerHTML= '';
+    getNextQuote();
+  }
+});
+
+const getRandomQuote = () => {
+  // return fetch(RANDOM_QUOTE_API_URL)
+  //   .then((resp) => resp.json())
+  //   .then((finalResp) => finalResp.content);
+};
+
+async function getNextQuote() {
+  // const quote = await getRandomQuote();
+  // quoteDisplayElement.innerHTML = "";
+  // quoteInput.value = "";
+  const quote=  'Hello User, Start Typing to improve your typing skills today';
+  quoteInput.value='';  
+  const quoteCharsArray = quote.split("");
+
+  quoteCharsArray.forEach((eChar) => {
+    const charSpan = document.createElement("span");
+    charSpan.classList.add("eachChar");
+    charSpan.innerText = eChar;
+    quoteDisplayElement.appendChild(charSpan);
+  });
+
+  startTimer();
 }
 
-getnewText();
+let startTime;
+function startTimer() {
+  timer.innerText = "0";
+  startTime = new Date();
+  setInterval(() => {
+    let secsComp = parseInt((new Date() - startTime) / 1000);
+    timer.innerText = secsComp;
+  }, 1000);
+}
 
-const updateRefreshTime = window.localStorage.getItem('currTime');
-if (updateRefreshTime) {
-    bestTime.innerText = parseInt(window.localStorage.getItem('currTime'));
+getNextQuote();
+
+const currLeastTime = window.localStorage.getItem("leastTime");
+if (currLeastTime != "undefined" && currLeastTime != null) {
+  console.log(currLeastTime);
+  bestTime.innerText = currLeastTime;
 }
