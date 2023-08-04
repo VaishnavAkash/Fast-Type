@@ -1,8 +1,7 @@
-// const endPoint = 'https://api.quotable.io/random';
 const quoteDisplay = document.getElementById('quote-display');
 const timeDisplay = document.getElementById('timer');
 const quoteInput = document.getElementById('quoteInput');
-const bestTime = document.getElementById('bestTime');
+const bestTime = document.getElementById('BestTime');
 async function getnewText() {
     const text = await fetchValue();
     // const text= 'Hello User, Start Typing to improve your typing skills today'
